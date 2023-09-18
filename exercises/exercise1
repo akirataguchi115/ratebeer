@@ -1,0 +1,437 @@
+taguchi@antienkeli:~/src/ratebeer$ rails c
+Loading development environment (Rails 7.0.7.2)
+irb(main):003> b = Beer.first
+  Beer Load (0.1ms)  SELECT "beers".* FROM "beers" ORDER BY "beers"."id" ASC LIMIT ?  [["LIMIT", 1]]
+=> 
+#<Beer:0x00007f53295a8e98
+...
+irb(main):004> b
+=> 
+#<Beer:0x00007f53295a8e98
+ id: 1,
+ name: "Iso 3",
+ style: "Lager",
+ brewery_id: 1,
+ created_at: Wed, 13 Sep 2023 09:55:22.293389000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 06:35:57.658638000 UTC +00:00>
+irb(main):005> reload!
+Reloading...
+=> true
+irb(main):006> b = Beer.first
+  Beer Load (0.1ms)  SELECT "beers".* FROM "beers" ORDER BY "beers"."id" ASC LIMIT ?  [["LIMIT", 1]]
+=> 
+#<Beer:0x00007f5328c16498
+...
+irb(main):007> b
+=> 
+#<Beer:0x00007f5328c16498
+ id: 1,
+ name: "Iso 3",
+ style: "Lager",
+ brewery_id: 1,
+ created_at: Wed, 13 Sep 2023 09:55:22.293389000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 06:35:57.658638000 UTC +00:00>
+irb(main):008> b.ratings.create score: 10
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.3ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 10], ["beer_id", 1], ["created_at", "2023-09-18 09:47:01.275493"], ["updated_at", "2023-09-18 09:47:01.275493"]]
+  TRANSACTION (28.5ms)  commit transaction
+=> 
+#<Rating:0x00007f5328c8f4b0
+ id: 1,
+ score: 10,
+ beer_id: 1,
+ created_at: Mon, 18 Sep 2023 09:47:01.275493000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:47:01.275493000 UTC +00:00>
+irb(main):009> b.ratings.create score: 21
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.4ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 21], ["beer_id", 1], ["created_at", "2023-09-18 09:47:10.666461"], ["updated_at", "2023-09-18 09:47:10.666461"]]
+  TRANSACTION (54.8ms)  commit transaction
+=> 
+#<Rating:0x00007f5328c47d40
+ id: 2,
+ score: 21,
+ beer_id: 1,
+ created_at: Mon, 18 Sep 2023 09:47:10.666461000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:47:10.666461000 UTC +00:00>
+irb(main):010> b.ratings.create score: 17
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.8ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 17], ["beer_id", 1], ["created_at", "2023-09-18 09:47:12.865838"], ["updated_at", "2023-09-18 09:47:12.865838"]]
+  TRANSACTION (54.6ms)  commit transaction
+=> 
+#<Rating:0x00007f5328b900f0
+ id: 3,
+ score: 17,
+ beer_id: 1,
+ created_at: Mon, 18 Sep 2023 09:47:12.865838000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:47:12.865838000 UTC +00:00>
+irb(main):011> b = Beer.create name:"anonymous", style: "watery"
+=> 
+#<Beer:0x00007f5328bbf120
+...
+irb(main):012> b.errors
+=> #<ActiveModel::Errors [#<ActiveModel::Error attribute=brewery, type=blank, options={:message=>:required}>]>
+irb(main):013> Brewery.all
+  Brewery Load (0.6ms)  SELECT "breweries".* FROM "breweries"
+=> 
+[#<Brewery:0x00007f5328ca1e30
+  id: 1,
+  name: "Hedönist",
+  year: 2014,
+  created_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00>,
+ #<Brewery:0x00007f5328c817e8
+  id: 2,
+  name: "Pien Brewing",
+  year: 2020,
+  created_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00>,
+ #<Brewery:0x00007f5328c81720
+  id: 3,
+  name: "Mosa Brewing",
+  year: 2021,
+  created_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00>]
+irb(main):014> b.brewery = Brewery.find_by(name: 'Hedönist')
+  Brewery Load (0.2ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "Hedönist"], ["LIMIT", 1]]
+=> 
+#<Brewery:0x00007f5328c4f360
+...
+irb(main):015> b.save
+  TRANSACTION (0.2ms)  begin transaction
+  Beer Create (1.4ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "anonymous"], ["style", "watery"], ["brewery_id", 1], ["created_at", "2023-09-18 09:48:49.024212"], ["updated_at", "2023-09-18 09:48:49.024212"]]
+  TRANSACTION (12.8ms)  commit transaction
+=> true
+irb(main):016> b = Breewry.create name:"Brewdog", year:2017
+(irb):16:in `<main>': uninitialized constant Breewry (NameError)
+
+b = Breewry.create name:"Brewdog", year:2017
+    ^^^^^^^
+Did you mean?  Brewery
+irb(main):017> b = Brewery.create name:"Brewdog", year:2017
+  TRANSACTION (0.1ms)  begin transaction
+  Brewery Create (0.2ms)  INSERT INTO "breweries" ("name", "year", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["name", "Brewdog"], ["year", 2017], ["created_at", "2023-09-18 09:51:04.052067"], ["updated_at", "2023-09-18 09:51:04.052067"]]
+  TRANSACTION (10.8ms)  commit transaction
+=> 
+#<Brewery:0x00007f5328d8f6a8
+...
+irb(main):018> b
+=> 
+#<Brewery:0x00007f5328d8f6a8
+ id: 6,
+ name: "Brewdog",
+ year: 2017,
+ created_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00>
+irb(main):019> b = Beer.create "Punk IPA", style: "IPA"
+/home/taguchi/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-7.0.7.2/lib/active_record/persistence.rb:33:in `create': wrong number of arguments (given 2, expected 0..1) (ArgumentError)
+irb(main):020> b = Beer.create name:"Punk IPA", style: "IPA"
+=> 
+#<Beer:0x00007f5328cffc60
+...
+irb(main):021> b2 = Beer.create name:"Nanny State", style: "low alcohol"
+=> 
+#<Beer:0x00007f532a26ebc8
+...
+irb(main):022> b.ratings.create score: 1
+/home/taguchi/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-7.0.7.2/lib/active_record/associations/collection_association.rb:342:in `_create_record': You cannot call create unless the parent is saved (ActiveRecord::RecordNotSaved)
+irb(main):023> b.brewery = Brewery.find_by(name: 'BrewDog')
+  Brewery Load (0.1ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "BrewDog"], ["LIMIT", 1]]
+=> nil
+irb(main):024> b
+=> 
+#<Beer:0x00007f5328cffc60
+ id: nil,
+ name: "Punk IPA",
+ style: "IPA",
+ brewery_id: nil,
+ created_at: nil,
+ updated_at: nil>
+irb(main):025> b
+=> 
+#<Beer:0x00007f5328cffc60
+ id: nil,
+ name: "Punk IPA",
+ style: "IPA",
+ brewery_id: nil,
+ created_at: nil,
+ updated_at: nil>
+irb(main):026> br = Brewery.find_by(name: 'BrewDog')
+  Brewery Load (0.4ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "BrewDog"], ["LIMIT", 1]]
+=> nil
+irb(main):027> b
+=> 
+#<Beer:0x00007f5328cffc60
+ id: nil,
+ name: "Punk IPA",
+ style: "IPA",
+ brewery_id: nil,
+ created_at: nil,
+ updated_at: nil>
+irb(main):028> br
+=> nil
+irb(main):029> Brewery.all
+  Brewery Load (0.4ms)  SELECT "breweries".* FROM "breweries"
+=> 
+[#<Brewery:0x00007f5328d03040
+  id: 1,
+  name: "Hedönist",
+  year: 2014,
+  created_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00>,
+ #<Brewery:0x00007f5328d02f78
+  id: 2,
+  name: "Pien Brewing",
+  year: 2020,
+  created_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00>,
+ #<Brewery:0x00007f5328d02e88
+  id: 3,
+  name: "Mosa Brewing",
+  year: 2021,
+  created_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00>,
+ #<Brewery:0x00007f5328d02d98
+  id: 6,
+  name: "Brewdog",
+  year: 2017,
+  created_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00>]
+irb(main):030> br = Brewery.find_by(name: 'Brewdog')
+  Brewery Load (0.3ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "Brewdog"], ["LIMIT", 1]]
+=> 
+#<Brewery:0x00007f53294c9540
+...
+irb(main):031> br
+=> 
+#<Brewery:0x00007f53294c9540
+ id: 6,
+ name: "Brewdog",
+ year: 2017,
+ created_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00>
+irb(main):032> b.brewery = Brewery.find_by(name: 'Brewdog')
+  Brewery Load (0.4ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "Brewdog"], ["LIMIT", 1]]
+=> 
+#<Brewery:0x00007f5328c889f8
+...
+irb(main):033> b2.brewery = Brewery.find_by(name: 'Brewdog')
+  Brewery Load (0.3ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."name" = ? LIMIT ?  [["name", "Brewdog"], ["LIMIT", 1]]
+=> 
+#<Brewery:0x00007f53293c65d0
+...
+irb(main):034> b.ratings.create score: 1
+/home/taguchi/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-7.0.7.2/lib/active_record/associations/collection_association.rb:342:in `_create_record': You cannot call create unless the parent is saved (ActiveRecord::RecordNotSaved)
+irb(main):035> br.save
+=> true
+irb(main):036> b.save
+  TRANSACTION (0.2ms)  begin transaction
+  Beer Create (0.9ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Punk IPA"], ["style", "IPA"], ["brewery_id", 6], ["created_at", "2023-09-18 09:55:26.410483"], ["updated_at", "2023-09-18 09:55:26.410483"]]
+  TRANSACTION (54.3ms)  commit transaction
+=> true
+irb(main):037> b2.save
+  TRANSACTION (0.2ms)  begin transaction
+  Beer Create (0.9ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Nanny State"], ["style", "low alcohol"], ["brewery_id", 6], ["created_at", "2023-09-18 09:55:29.531639"], ["updated_at", "2023-09-18 09:55:29.531639"]]
+  TRANSACTION (12.2ms)  commit transaction
+=> true
+irb(main):038> b.ratings.create score: 1
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.8ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 1], ["beer_id", 7], ["created_at", "2023-09-18 09:55:31.563239"], ["updated_at", "2023-09-18 09:55:31.563239"]]
+  TRANSACTION (11.5ms)  commit transaction
+=> 
+#<Rating:0x00007f5328d76a40
+ id: 4,
+ score: 1,
+ beer_id: 7,
+ created_at: Mon, 18 Sep 2023 09:55:31.563239000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:31.563239000 UTC +00:00>
+irb(main):039> b.ratings.create score: 2
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.7ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 2], ["beer_id", 7], ["created_at", "2023-09-18 09:55:34.807230"], ["updated_at", "2023-09-18 09:55:34.807230"]]
+  TRANSACTION (4.4ms)  commit transaction
+=> 
+#<Rating:0x00007f5328cd5168
+ id: 5,
+ score: 2,
+ beer_id: 7,
+ created_at: Mon, 18 Sep 2023 09:55:34.807230000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:34.807230000 UTC +00:00>
+irb(main):040> b.ratings.create score: 3
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.7ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 3], ["beer_id", 7], ["created_at", "2023-09-18 09:55:36.155730"], ["updated_at", "2023-09-18 09:55:36.155730"]]
+  TRANSACTION (12.0ms)  commit transaction
+=> 
+#<Rating:0x00007f5328c15390
+ id: 6,
+ score: 3,
+ beer_id: 7,
+ created_at: Mon, 18 Sep 2023 09:55:36.155730000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:36.155730000 UTC +00:00>
+irb(main):041> b2.ratings.create score: 4
+  TRANSACTION (0.0ms)  begin transaction
+  Rating Create (0.2ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 4], ["beer_id", 8], ["created_at", "2023-09-18 09:55:43.391886"], ["updated_at", "2023-09-18 09:55:43.391886"]]
+  TRANSACTION (10.4ms)  commit transaction
+=> 
+#<Rating:0x00007f532a2d24c0
+ id: 7,
+ score: 4,
+ beer_id: 8,
+ created_at: Mon, 18 Sep 2023 09:55:43.391886000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:43.391886000 UTC +00:00>
+irb(main):042> b2.ratings.create score: 5
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.7ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 5], ["beer_id", 8], ["created_at", "2023-09-18 09:55:45.641262"], ["updated_at", "2023-09-18 09:55:45.641262"]]
+  TRANSACTION (11.4ms)  commit transaction
+=> 
+#<Rating:0x00007f532a213f20
+ id: 8,
+ score: 5,
+ beer_id: 8,
+ created_at: Mon, 18 Sep 2023 09:55:45.641262000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:45.641262000 UTC +00:00>
+irb(main):043> b2.ratings.create score: 6
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (0.9ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 6], ["beer_id", 8], ["created_at", "2023-09-18 09:55:47.266587"], ["updated_at", "2023-09-18 09:55:47.266587"]]
+  TRANSACTION (12.3ms)  commit transaction
+=> 
+#<Rating:0x00007f5328d0a2c8
+ id: 9,
+ score: 6,
+ beer_id: 8,
+ created_at: Mon, 18 Sep 2023 09:55:47.266587000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:47.266587000 UTC +00:00>
+irb(main):044> b.save
+=> true
+irb(main):045> b2.save
+=> true
+irb(main):046> b
+=> 
+#<Beer:0x00007f5328cffc60
+ id: 7,
+ name: "Punk IPA",
+ style: "IPA",
+ brewery_id: 6,
+ created_at: Mon, 18 Sep 2023 09:55:26.410483000 UTC +00:00,
+ updated_at: Mon, 18 Sep 2023 09:55:26.410483000 UTC +00:00>
+irb(main):047> Rating.all
+  Rating Load (0.2ms)  SELECT "ratings".* FROM "ratings"
+=> 
+[#<Rating:0x00007f53294356d8
+  id: 1,
+  score: 10,
+  beer_id: 1,
+  created_at: Mon, 18 Sep 2023 09:47:01.275493000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:47:01.275493000 UTC +00:00>,
+ #<Rating:0x00007f5329435598
+  id: 2,
+  score: 21,
+  beer_id: 1,
+  created_at: Mon, 18 Sep 2023 09:47:10.666461000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:47:10.666461000 UTC +00:00>,
+ #<Rating:0x00007f5329435430
+  id: 3,
+  score: 17,
+  beer_id: 1,
+  created_at: Mon, 18 Sep 2023 09:47:12.865838000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:47:12.865838000 UTC +00:00>,
+ #<Rating:0x00007f5329435368
+  id: 4,
+  score: 1,
+  beer_id: 7,
+  created_at: Mon, 18 Sep 2023 09:55:31.563239000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:31.563239000 UTC +00:00>,
+ #<Rating:0x00007f5329435160
+  id: 5,
+  score: 2,
+  beer_id: 7,
+  created_at: Mon, 18 Sep 2023 09:55:34.807230000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:34.807230000 UTC +00:00>,
+ #<Rating:0x00007f5329434c38
+  id: 6,
+  score: 3,
+  beer_id: 7,
+  created_at: Mon, 18 Sep 2023 09:55:36.155730000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:36.155730000 UTC +00:00>,
+ #<Rating:0x00007f53294349e0
+  id: 7,
+  score: 4,
+  beer_id: 8,
+  created_at: Mon, 18 Sep 2023 09:55:43.391886000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:43.391886000 UTC +00:00>,
+ #<Rating:0x00007f5329434878
+  id: 8,
+  score: 5,
+  beer_id: 8,
+  created_at: Mon, 18 Sep 2023 09:55:45.641262000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:45.641262000 UTC +00:00>,
+ #<Rating:0x00007f53294347b0
+  id: 9,
+  score: 6,
+  beer_id: 8,
+  created_at: Mon, 18 Sep 2023 09:55:47.266587000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:47.266587000 UTC +00:00>]
+irb(main):048> Brewery.all
+  Brewery Load (0.2ms)  SELECT "breweries".* FROM "breweries"
+=> 
+[#<Brewery:0x00007f532a2a9868
+  id: 1,
+  name: "Hedönist",
+  year: 2014,
+  created_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:34:47.313408000 UTC +00:00>,
+ #<Brewery:0x00007f532a2a97a0
+  id: 2,
+  name: "Pien Brewing",
+  year: 2020,
+  created_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:04.310835000 UTC +00:00>,
+ #<Brewery:0x00007f532a2a96d8
+  id: 3,
+  name: "Mosa Brewing",
+  year: 2021,
+  created_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00,
+  updated_at: Wed, 06 Sep 2023 06:35:23.361583000 UTC +00:00>,
+ #<Brewery:0x00007f532a2a9610
+  id: 6,
+  name: "Brewdog",
+  year: 2017,
+  created_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:51:04.052067000 UTC +00:00>]
+irb(main):049> Beer.all
+  Beer Load (0.8ms)  SELECT "beers".* FROM "beers"
+=> 
+[#<Beer:0x00007f5328d3c980
+  id: 1,
+  name: "Iso 3",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Wed, 13 Sep 2023 09:55:22.293389000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 06:35:57.658638000 UTC +00:00>,
+ #<Beer:0x00007f5328d3c8b8
+  id: 2,
+  name: "Karhu",
+  style: "Lager",
+  brewery_id: 1,
+  created_at: Wed, 13 Sep 2023 09:56:05.620742000 UTC +00:00,
+  updated_at: Wed, 13 Sep 2023 09:56:05.620742000 UTC +00:00>,
+ #<Beer:0x00007f5328d3c7f0
+  id: 6,
+  name: "anonymous",
+  style: "watery",
+  brewery_id: 1,
+  created_at: Mon, 18 Sep 2023 09:48:49.024212000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:48:49.024212000 UTC +00:00>,
+ #<Beer:0x00007f5328d3c728
+  id: 7,
+  name: "Punk IPA",
+  style: "IPA",
+  brewery_id: 6,
+  created_at: Mon, 18 Sep 2023 09:55:26.410483000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:26.410483000 UTC +00:00>,
+ #<Beer:0x00007f5328d3c660
+  id: 8,
+  name: "Nanny State",
+  style: "low alcohol",
+  brewery_id: 6,
+  created_at: Mon, 18 Sep 2023 09:55:29.531639000 UTC +00:00,
+  updated_at: Mon, 18 Sep 2023 09:55:29.531639000 UTC +00:00>]
+irb(main):050> 
