@@ -19,6 +19,7 @@ class BeersController < ApplicationController
 
   # GET /beers/1/edit
   def edit
+    @styles = ["Weizen", "Lager", "Pale ale", "IPA", "Porter", "Low alcohol"]
   end
 
   # POST /beers or /beers.json
