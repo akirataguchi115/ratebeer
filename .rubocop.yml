@@ -72,3 +72,9 @@ Metrics/BlockLength:
 
 Layout/IndentationStyle:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics:
+  Enabled: true
