@@ -78,3 +78,6 @@ Metrics/MethodLength:
 
 Metrics:
   Enabled: true
+
+Layout/IndentationWidth:
+  Enabled: false
