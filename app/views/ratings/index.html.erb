@@ -2,10 +2,8 @@
 
 <ul>
  <% @ratings.each do |rating| %>
-   <li> <%= render rating %> <%= button_to 'delete', rating, method: :delete, form: { data: { turbo_confirm: 'Are you sure?' } } %> </li>
+   <li> <%= "#{rating.beer.name} #{rating.score}" %> <%= link_to "#{rating.user.username}", rating.user %> </li>
  <% end %>
 </ul>
-
-ratings <%= @ratings.count %>
 
 <%= link_to "New rating", new_rating_path %>
