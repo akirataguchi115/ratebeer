@@ -9,6 +9,16 @@
 	ratings, average rating
 	<%= @user.average_rating %>
 </p>
+
+<p><b>member of</b></p>
+<ul>
+	<% @user.beer_clubs.each do |beer_club| %>
+		<li>
+			<%= link_to beer_club.name, beer_club %>
+		</li> 
+	<% end %>
+</ul>
+
 <p><b>ratings</b></p>
 
 <ul>
@@ -16,7 +26,7 @@
 		<li>
 			<%= rating.beer.name%> <%= rating.score %>
 			<%= link_to 'delete', rating, data: {turbo_method: :delete, turbo_confirm: 'Are you sure?'} %> </li>
-		</li>	
+		</li> 
 	<% end %>
 </ul>
 
