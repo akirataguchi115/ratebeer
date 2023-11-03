@@ -9,7 +9,7 @@ class MembershipsController < ApplicationController
 	# GET /memberships/new
 	def new
 		@membership = Membership.new
-		@beer_clubs = BeerClub.all
+		@beer_clubs = BeerClub.where.not(id: [current_user.beer_clubs.ids])
 	end
 
 	# POST /memberships or /memberships.json
