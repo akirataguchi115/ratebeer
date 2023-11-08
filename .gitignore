@@ -95,3 +95,5 @@ yarn-debug.log*
 # Ignore uploaded files in development
 /storage/*
 /public/uploads
+
+.vscode
