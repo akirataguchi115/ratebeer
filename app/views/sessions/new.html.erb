@@ -1,11 +1,18 @@
-<h1>Sign in</h1>
+<div class="user-form" style="padding: 20px;">
+	<h1>Sign In</h1>
 
-<p id="notice"><%= notice %></p>
+	<p id="notice"><%= notice %></p>
 
-<%= form_with url: session_path, method: :post do |form| %>
-	username <%= form.text_field :username %>
-	password <%= form.password_field :password %>
-	<%= form.submit "Log in" %>
-<% end %>
+	<%= form_with url: session_path, method: :post do |form| %>
+		Username <%= form.text_field :username %><br>
+		Password <%= form.password_field :password %><br>
+		<%= form.submit "Log in", class: "btn btn-primary" %>
+	<% end %>
 
-<p style="color: red"><%= notice %></p>
+
+	<br><br><p>Need an account? Create one now!</p>
+	<%= link_to 'Sign up', signup_path, class: "btn btn-primary" %>
+
+
+	<p style="color: red"><%= notice %></p>
+</div>
