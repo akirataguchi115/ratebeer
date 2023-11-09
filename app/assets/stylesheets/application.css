@@ -14,7 +14,39 @@
  *= require_self
  */
 
-.navibar {
+.nav-bar {
 	padding: 10px;
 	background: #EFEFEF;
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
+}
+
+.nav-brand {
+	color: #860300;
+}
+
+.nav-menu {
+	display: inline-flex;
+	padding-right: 20px;
+	padding-top: 14px;
+}
+
+.nav-links a{
+	padding-right: 20px;
+	text-decoration: none;
+	color: darkred;
+}
+
+.nav-links a:hover {
+	color: black;
+}
+
+.nav-user {
+	padding-left: 20px;
+}
+
+.nav-user a{
+	text-decoration: none;
+	color: #6D003C;
 }
