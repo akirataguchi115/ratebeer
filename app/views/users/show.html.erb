@@ -10,6 +10,9 @@
 	<%= @user.average_rating %>
 </p>
 
+<p><b>favorite style</b><p>
+<%= @user.favorite_style %>
+
 <p><b>member of</b></p>
 <ul>
 	<% @user.beer_clubs.each do |beer_club| %>
