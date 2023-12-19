@@ -13,6 +13,9 @@
 <p><b>favorite style</b><p>
 <%= @user.favorite_style %>
 
+<p><b>favorite brewery</b><p>
+<%= @user.favorite_brewery %>
+
 <p><b>member of</b></p>
 <ul>
 	<% @user.beer_clubs.each do |beer_club| %>

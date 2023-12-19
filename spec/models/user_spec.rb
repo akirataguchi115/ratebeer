@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-	def create_beer_with_rating(object, score, style)
+	def create_beer_with_rating(object, score, style, brewery)
 		beer = FactoryBot.create(:beer)
 		if style != "" then
 			beer.style = style
+		end
+		if brewery != "" then
+			beer.brewery.name = brewery
 		end
 
 		FactoryBot.create(:rating, beer: beer, score: score, user: object[:user])
@@ -13,7 +16,7 @@ RSpec.describe User, type: :model do
 
 	def create_beers_with_many_ratings(object, *scores)
 		scores.each do |score|
-			create_beer_with_rating(object, score, "")
+			create_beer_with_rating(object, score, "", "")
 		end
 	end
 
@@ -67,7 +70,7 @@ RSpec.describe User, type: :model do
 
 		it "is the one with highest rating if several rated" do
 			create_beers_with_many_ratings({user: user}, 10, 20, 15, 7, 9)
-			best = create_beer_with_rating({user: user}, 25, "")
+			best = create_beer_with_rating({user: user}, 25, "", "")
 			expect(user.favorite_beer).to eq(best)
 		end
 	end
@@ -85,8 +88,26 @@ RSpec.describe User, type: :model do
 
 		it "is the one with highest rating if several rated" do
 			create_beers_with_many_ratings({user: user}, 10, 20, 15, 7,9)
-			best = create_beer_with_rating({user: user}, 25, "IPA")
+			best = create_beer_with_rating({user: user}, 25, "IPA", "")
 			expect(user.favorite_style == (best.style))
+		end
+	end
+
+	describe "favorite brewery" do
+		let(:user){ FactoryBot.create(:user) }
+
+		it "has method for determining one" do
+			expect(user).to respond_to(:favorite_brewery)
+		end
+
+		it "without ratings does not have one" do
+			expect(user.favorite_brewery).to eq(nil)
+		end
+
+		it "is the one with highest rating if several rated" do
+			create_beers_with_many_ratings({user: user}, 10, 20, 15, 7,9)
+			best = create_beer_with_rating({user: user}, 25, "IPA", "Hartwall")
+			expect(user.favorite_brewery == (best.brewery))
 		end
 	end
 end
