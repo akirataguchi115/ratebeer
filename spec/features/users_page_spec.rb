@@ -43,5 +43,20 @@ describe "User" do
 			expect(page).to have_content '7'
 			expect(page).to have_no_content '9'
 		end
+
+		it "can see their favorite brewery and style" do
+			sign_in(username: "Pekka", password: "Foobar1")
+			FactoryBot.create :rating, score: 5, user: user
+			FactoryBot.create :rating, score: 6, user: user
+			FactoryBot.create :rating, score: 7, user: user
+			FactoryBot.create :rating, score: 8, user: user
+			FactoryBot.create :rating, score: 9, user: user2
+			visit user_path(user)
+			# save_and_open_page
+			expect(page).to have_content 'favorite style'
+			expect(page).to have_content 'favorite brewery'
+			expect(page).to have_content 'anonymous'
+			expect(page).to have_content 'Lager'
+		end
 	end
 end
